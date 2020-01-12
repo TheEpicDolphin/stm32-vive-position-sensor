@@ -1,5 +1,6 @@
 #include "vector.h"
 
+/*
 void vector_init(vector *self)
 {
 	self->capacity = VECTOR_INIT_CAPACITY;
@@ -72,3 +73,5 @@ void vector_free(vector *self)
 {
     free(self->items);
 }
+*/
+

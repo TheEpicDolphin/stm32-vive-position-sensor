@@ -20,6 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "cmsis_os.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -51,11 +52,11 @@
 
 /* USER CODE BEGIN PV */
 uint16_t timestamp;
-Input input;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -102,60 +103,19 @@ int main(void)
 
   /* USER CODE END 2 */
 
+  /* Call init function for freertos objects (in freertos.c) */
+  MX_FREERTOS_Init(); 
+
+  /* Start scheduler */
+  osKernelStart();
+  
+  /* We should never get here as control is now taken by the scheduler */
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-
-
-  BaseStationGeometryDef bs_0 = {{0.682646, 1.712605, 0.298152},
-		  	  	  	  	  	  	 {0.356806, -0.017381, 0.934017, 0.001791, 0.999838, 0.017922, -0.934177, -0.004722, 0.356779}};
-
-  BaseStationGeometryDef bs_1 = {{0.780941, 2.300994, -0.204002},
-  	  	  	  	  	  	  	  	 {-0.184830, -0.411017, 0.892694, 0.104180, 0.895032, 0.433664, -0.977233, 0.173155, -0.122609}};
-
-  SensorLocalGeometry s_loc_geo = {0, {0.0, 0.0, 0.0}};
-  GeometryBuilder geometry_builder = {{bs_0, bs_1}, {s_loc_geo}};
-
-  PulseProcessor pulse_processor = _PulseProcessor(1);
-  pulse_processor.next = &geometry_builder;
-  input.next = &pulse_processor;
-
-  Pulse dummyPulses[] = {{0, 0, 65}, {0, 400, 84}, {0, 1500, 10},
-		 				 {0, 8333, 65}, {0, 8733, 85}, {0, 12333, 15},
-						 {0, 16666, 85}, {0, 17066, 66}, {0, 21666, 9},
-						 {0, 24999, 84}, {0, 25399, 66}, {0, 27999, 10},
-
-						 {0, 33332, 65}, {0, 33732, 84}, {0, 35332, 10},
-						 {0, 41665, 65}, {0, 42065, 85}, {0, 44665, 15},
-						 {0, 49998, 85}, {0, 50398, 66}, {0, 53998, 9},
-						 {0, 58331, 84}, {0, 58731, 66}, {0, 63331, 10}};
-  int i = 0;
-  uint64_t timer = 0;
   while (1)
   {
-
-	/*
-	if(timestamp >= dummyPulses[i].start_time + dummyPulses[i].pulse_len){
-		enqueue_pulse(&input, timestamp - dummyPulses[i].pulse_len, dummyPulses[i].pulse_len);
-		i += 1;
-	}
-
-	do_work_input(&input, timestamp);
-	do_work_pulse_processor(&pulse_processor, timestamp);
-	timestamp += 1;
-	*/
-
-	do_work_input(&input, __HAL_TIM_GET_COUNTER(&htim16));
-	do_work_pulse_processor(&pulse_processor, __HAL_TIM_GET_COUNTER(&htim16));
-
-
-	if(timer % 65536 == 0){
-		float x = geometry_builder.pos_.pos[0];
-		float y = geometry_builder.pos_.pos[1];
-		UART_Print_float(x);
-	}
-	timer += 1;
-	//HAL_Delay(1000);
 
     /* USER CODE END WHILE */
 
@@ -220,25 +180,47 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-	//timestamp = HAL_GetTick();
 	timestamp = __HAL_TIM_GET_COUNTER(&htim16);
 
 	GPIO_PinState pin_state = HAL_GPIO_ReadPin(PC0_GPIO_Port, PC0_Pin);
 	if (pin_state == GPIO_PIN_SET) {
 		//Rising edge
-		input.rise_time_ = timestamp;
-		input.rise_valid_ = 1;
+		input0.rise_time_ = timestamp;
+		input0.rise_valid_ = 1;
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
 	}
-	else if (input.rise_valid_ && pin_state == GPIO_PIN_RESET) {
+	else if (input0.rise_valid_ && pin_state == GPIO_PIN_RESET) {
 		//Falling edge
-		enqueue_pulse(&input, input.rise_time_, timestamp - input.rise_time_);
-		input.rise_valid_ = 0;
+		enqueue_pulse(&input0, input0.rise_time_, timestamp - input0.rise_time_);
+		input0.rise_valid_ = 0;
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
 	}
 }
 
+
+
 /* USER CODE END 4 */
+
+/**
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM1 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
+
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM1) {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+
+  /* USER CODE END Callback 1 */
+}
 
 /**
   * @brief  This function is executed in case of error occurrence.

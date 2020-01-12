@@ -1,2 +1,3 @@
-input.c:10:6:do_work_input	24	static
-input.c:21:6:enqueue_pulse	24	static
+input.c:12:6:_Input	16	static
+input.c:30:6:PulseHandlerTask	24	static
+input.c:60:6:enqueue_pulse	24	static

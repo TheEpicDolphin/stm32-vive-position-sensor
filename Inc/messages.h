@@ -11,7 +11,7 @@
 #define NUM_CYCLE_PHASES 4
 
 typedef struct Pulse {
-	uint32_t input_idx;
+	uint8_t input_idx;
 	uint16_t start_time;
 	uint16_t pulse_len;
 } Pulse;

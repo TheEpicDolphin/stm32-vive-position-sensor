@@ -1,6 +1,5 @@
 #pragma once
 #include "stm32wbxx_hal.h"
-#include "vector.h"
 #include "messages.h"
 
 #define NUM_SENSORS 1
