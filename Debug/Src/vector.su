@@ -1,0 +1,8 @@
+vector.c:3:6:vector_init	16	static
+vector.c:11:6:vector_resize	24	static
+vector.c:24:6:vector_push	16	static
+vector.c:31:6:vector_set	24	static
+vector.c:37:7:vector_get	16	static
+vector.c:44:6:vector_delete	24	static
+vector.c:62:8:vector_pop	24	static
+vector.c:71:6:vector_free	16	static

@@ -1,0 +1,6 @@
+UART_Print.c:16:6:UART_Send_Start	16	static
+UART_Print.c:21:6:UART_Print_float	24	static
+UART_Print.c:28:6:UART_Print_uint32_t	24	static
+UART_Print.c:35:6:UART_Print_uint16_t	24	static
+UART_Print.c:42:6:UART_Print_int32_t	24	static
+UART_Print.c:49:6:UART_Print_int16_t	24	static

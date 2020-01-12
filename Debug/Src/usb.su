@@ -1,0 +1,6 @@
+stm32wbxx_ll_bus.h:508:22:LL_AHB2_GRP1_EnableClock	24	static
+stm32wbxx_ll_bus.h:894:22:LL_APB1_GRP1_EnableClock	24	static
+stm32wbxx_ll_bus.h:989:22:LL_APB1_GRP1_DisableClock	16	static
+usb.c:31:6:MX_USB_PCD_Init	8	static
+usb.c:49:6:HAL_PCD_MspInit	40	static
+usb.c:79:6:HAL_PCD_MspDeInit	16	static
