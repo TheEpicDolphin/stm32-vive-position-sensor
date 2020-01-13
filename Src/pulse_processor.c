@@ -57,7 +57,6 @@ Pulse vector_get(vector *self, int index)
 }
 
 void vector_clear(vector *self){
-	memset(self->items, 0, MAX_CAPACITY * sizeof(Pulse));
 	self->count = 0;
 }
 
@@ -151,7 +150,6 @@ void process_short_pulse(PulseProcessor *self, Pulse *p){
 void process_cycle_fix(PulseProcessor *self, uint16_t cur_time) {
     int pulse_start_corrections[NUM_BASE_STATIONS] = {};
     uint16_t pulse_lens[NUM_BASE_STATIONS] = {};
-
     // Check if we have long pulses from at least one base station.
     if (self->cycle_long_pulses_[0].count > 0 || self->cycle_long_pulses_[1].count > 0) {
         // Increase fix level if we have pulses from both stations.
@@ -179,7 +177,6 @@ void process_cycle_fix(PulseProcessor *self, uint16_t cur_time) {
         }
         // Send pulse lengths to phase classifier.
         process_pulse_lengths(&self->phase_classifier_, self->cycle_idx_, pulse_lens);
-
     }
     else {
         // No long pulses this cycle. We can survive several of such cycles, but our confidence in timing sinks.
@@ -193,7 +190,7 @@ void process_cycle_fix(PulseProcessor *self, uint16_t cur_time) {
 
     int cycle_phase = get_phase(&self->phase_classifier_, self->cycle_idx_);
     if (cycle_phase >= 0) {
-    	UART_Print_int32_t(cycle_phase);
+    	//UART_Print_int32_t(cycle_phase);
         // From (potentially several) short pulses for the same input, we choose the longest one.
         Pulse *short_pulses[MAX_NUM_INPUTS] = {};
         uint16_t short_pulse_timings[MAX_NUM_INPUTS] = {};

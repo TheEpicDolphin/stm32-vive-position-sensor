@@ -18,7 +18,7 @@ typedef struct SensorLocalGeometry {
 
 // Parent, abstract class for GeometryBuilders.
 typedef struct GeometryBuilder{
-    const BaseStationGeometryDef base_stations_[2];
+    BaseStationGeometryDef base_stations_[2];
     SensorLocalGeometry sensors[NUM_SENSORS];
     ObjectPosition pos_;
 } GeometryBuilder;
@@ -42,6 +42,7 @@ typedef struct CoordinateSystemConverter {
 } CoordinateSystemConverter;
 */
 
+void _GeometryBuilder(GeometryBuilder *self);
 void consume_angles(GeometryBuilder * self, const SensorAnglesFrame * f);
 void vec_cross_product(float *a, float *b, float *res);
 float vec_length(float *vec);
