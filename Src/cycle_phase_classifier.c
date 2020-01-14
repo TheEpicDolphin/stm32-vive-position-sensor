@@ -20,6 +20,7 @@ void process_pulse_lengths(CyclePhaseClassifier * self, uint32_t cycle_idx, cons
             self->phase_history_ = (self->phase_history_ << 1) | cur_more;  // phase_history_ keeps a bit for each pulse comparison.
             static const char phases[4] = {1, 2, 0, 3};
             cur_phase_id = phases[self->phase_history_ & 0x3];  // 2 least significant bits give us enough info to get phase.
+            //UART_Print_int32_t(cur_phase_id);
         }
         else {
             self->phase_history_ = cur_more;

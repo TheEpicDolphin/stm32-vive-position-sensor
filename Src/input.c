@@ -18,38 +18,30 @@ void _Input(Input *self, uint8_t input_idx){
 	self->input_idx_ = input_idx;
 
 }
-//volatile uint32_t count = 0;
+volatile uint32_t count = 0;
+Pulse p;
 void PulseHandlerTask(void *argument){
 	_Input(&input0, 0);
-	//uint64_t timer = 0;
-	Pulse p;
 	while(1){
-
 		osMessageQueueGet (pulseQueue, (void *) &p, NULL, osWaitForever);
-		//UART_Print_uint16_t(p.pulse_len);
 		consume_pulse(input0.next, &p);
-		do_work_pulse_processor(input0.next, __HAL_TIM_GET_COUNTER(&htim16));
-
-		/*
-		if(timer % 65536 == 0){
-			float x = input0.next->next->pos_.pos[0];
-			float y = input0.next->next->pos_.pos[1];
-			//UART_Print_float(x);
-		}
-		timer += 1;
-		*/
 	}
+
+
+	/*
+	while(1){
+		osThreadFlagsWait(, , osWaitForever);
+		while(1){
+			osMessageQueueGet (pulseQueue, (void *) &p, NULL, osWaitForever);
+			consume_pulse(input0.next, &p);
+		}
+	}
+	*/
 }
 
 
 void enqueue_pulse(Input *self, uint16_t start_time, uint16_t len){
-	Pulse p = {self->input_idx_, start_time, len};
-	osMessageQueuePut(pulseQueue, (const void *) &p, 0, 0);
-
-	//osMessageQueueGet (pulseQueue, (void *) &p, NULL, 0);
-	//Pulse p = {0, 420, 69};
-	//osMessageQueuePut(pulseQueue, (const void *) &p, 0, 0);
-
-	//UART_Print_uint16_t(np.pulse_len);
-	//UART_Print_uint16_t(p.pulse_len);
+	Pulse p_in = {self->input_idx_, start_time, len};
+	osMessageQueuePut(pulseQueue, (const void *) &p_in, 0, 0);
+	count = osMessageQueueGetCount(pulseQueue);
 }

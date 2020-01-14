@@ -9,6 +9,7 @@
 #include <math.h>
 #include <assert.h>
 #include <arm_math.h>
+#include "UART_Print.h"
 
 void _GeometryBuilder(GeometryBuilder *self){
 	BaseStationGeometryDef bs_0 = {{0.682646, 1.712605, 0.298152},
@@ -56,6 +57,7 @@ void consume_angles(GeometryBuilder * self, const SensorAnglesFrame * f) {
             	self->pos_.pos[i] -= sens_def->pos[i];
             }
 
+            UART_Print_float(self->pos_.pos[0]);
         }
         else {
             // Angles too stale - cannot calculate position anymore.
