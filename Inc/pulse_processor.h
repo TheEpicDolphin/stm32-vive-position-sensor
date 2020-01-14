@@ -3,6 +3,7 @@
 #include "messages.h"
 #include "cycle_phase_classifier.h"
 #include "geometry.h"
+//#include "input.h"
 
 #define MAX_CAPACITY	16
 typedef struct vector {
@@ -39,8 +40,7 @@ typedef struct PulseProcessor{
 	GeometryBuilder *next;
 } PulseProcessor;
 
-//vector debug_ar;
-//uint16_t start_t[128];
+
 
 void _PulseProcessor(PulseProcessor *self, uint32_t num_inputs);
 void consume_pulse(PulseProcessor *self, Pulse* p);

@@ -20,27 +20,9 @@ typedef struct SensorLocalGeometry {
 typedef struct GeometryBuilder{
     BaseStationGeometryDef base_stations_[2];
     SensorLocalGeometry sensors[NUM_SENSORS];
-    ObjectPosition pos_;
+    VIVEVars vive_vars_;
 } GeometryBuilder;
 
-// Stored type and definition for CoordinateSystemConverter.
-enum CoordSysType {
-    kDefault,  // No conversion.
-    kNED,      // North-East-Down.
-};
-
-union CoordSysDef {
-    struct {
-        float north_angle;  // Angle between North and X axis, in degrees.
-    } ned;
-};
-
-/*
-// Helper node to convert coordinates to a different coordinate system.
-typedef struct CoordinateSystemConverter {
-    float mat_[9];
-} CoordinateSystemConverter;
-*/
 
 void _GeometryBuilder(GeometryBuilder *self);
 void consume_angles(GeometryBuilder * self, const SensorAnglesFrame * f);

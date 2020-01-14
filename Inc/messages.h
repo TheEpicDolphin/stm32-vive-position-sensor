@@ -1,5 +1,6 @@
 #pragma once
 #include "stm32wbxx_hal.h"
+#include "cmsis_os2.h"
 
 // Tunable constants
 #define MAX_NUM_INPUTS 8	// Number of concurrent sensors supported.
@@ -55,13 +56,11 @@ typedef struct DataFrame {
     uint8_t bytes[MAX_BYTES_IN_DATA_FRAME];
 } DataFrame;
 
+typedef struct VIVEVars{
+	float pos[3];
+	float pos_delta;
+	uint32_t time_ms;
+} VIVEVars;
 
-// Position of an object. Calculated by GeometryBuilders and consumed by FormatterNodes.
-typedef struct ObjectPosition {
-	uint16_t time;
-    uint32_t object_idx; // Index of the object.
-    int fix_level;
-    float pos[3];     // 3d object position
-    float pos_delta;  // Distance between base station rays. Can be used as a measure of position uncertainty.
-    float q[4];       // Rotation quaternion (unit if no rotation information available)
-} ObjectPosition;
+osMessageQueueId_t pulseQueue;
+osMessageQueueId_t viveQueue;

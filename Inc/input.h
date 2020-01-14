@@ -11,7 +11,6 @@
 #include "geometry.h"
 #include "circular_buffer.h"
 #include "messages.h"
-#include "cmsis_os2.h"
 #include "tim.h"
 
 typedef struct Input{
@@ -29,10 +28,11 @@ typedef struct Input{
 
 Input input0;
 osThreadId_t pulseHandlerTaskHandle;
-osMessageQueueId_t pulseQueue;
+osThreadId_t masterTaskHandle;
 
 void _Input(Input *self, uint8_t input_idx);
 void PulseHandlerTask(void *argument);
+void MasterTask(void *argument);
 void enqueue_pulse(Input *self, uint16_t start_time, uint16_t len);
 
 

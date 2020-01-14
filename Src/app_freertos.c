@@ -27,6 +27,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */     
 #include "input.h"
+#include "pulse_processor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -100,6 +101,14 @@ osKernelInitialize();
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
+	const osThreadAttr_t masterTask_attributes = {
+		.name = "masterTask",
+		.priority = (osPriority_t) osPriorityHigh,
+		.stack_size = 256
+	  };
+	masterTaskHandle = osThreadNew(MasterTask, NULL, &masterTask_attributes);
+	viveQueue = osMessageQueueNew(10, sizeof(VIVEVars), NULL);
+
   const osThreadAttr_t pulseHandlerTask_attributes = {
       .name = "pulseHandlerTask",
       .priority = (osPriority_t) osPriorityAboveNormal,

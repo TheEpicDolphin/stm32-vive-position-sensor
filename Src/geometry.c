@@ -28,9 +28,6 @@ void consume_angles(GeometryBuilder * self, const SensorAnglesFrame * f) {
     // First 2 angles - x, y of station B; second 2 angles - x, y of station C.
     // Coordinate system: Y - Up;  X ->  Z v  (to the viewer)
     // Station 'looks' to inverse Z axis (vector 0;0;-1).
-    self->pos_.time = f->time;
-    self->pos_.fix_level = f->fix_level;
-
     if (f->fix_level >= kCycleSynced) {
         SensorLocalGeometry *sens_def = &self->sensors[0];
         SensorAngles *sens = &f->sensors[sens_def->input_idx];
@@ -44,24 +41,25 @@ void consume_angles(GeometryBuilder * self, const SensorAnglesFrame * f) {
         }
 
         if (max_stale < NUM_CYCLE_PHASES * 3) {  // We tolerate stale angles up to 2 cycles old.
-            self->pos_.fix_level = (max_stale < NUM_CYCLE_PHASES) ? kFullFix : kStaleFix;
-
             float ray1[VEC3D_SIZE], ray2[VEC3D_SIZE], origin1[VEC3D_SIZE], origin2[VEC3D_SIZE];
             calc_ray_vec(&self->base_stations_[0], sens->angles[0], sens->angles[1], ray1, origin1);
             calc_ray_vec(&self->base_stations_[1], sens->angles[2], sens->angles[3], ray2, origin2);
 
-            intersect_lines(origin1, ray1, origin2, ray2, self->pos_.pos, &self->pos_.pos_delta);
+            intersect_lines(origin1, ray1, origin2, ray2, self->vive_vars_.pos, &self->vive_vars_.pos_delta);
 
             // Translate object position depending on the position of sensor relative to object.
             for (int i = 0; i < VEC3D_SIZE; i++){
-            	self->pos_.pos[i] -= sens_def->pos[i];
+            	self->vive_vars_.pos[i] -= sens_def->pos[i];
             }
 
-            UART_Print_float(self->pos_.pos[0]);
+            self->vive_vars_.time_ms = HAL_GetTick();
+
+
+            //UART_Print_float(self->vive_vars_.pos[0]);
         }
         else {
             // Angles too stale - cannot calculate position anymore.
-            self->pos_.fix_level = kPartialVis;
+
         }
     }
 }
