@@ -104,7 +104,7 @@ osKernelInitialize();
 	const osThreadAttr_t masterTask_attributes = {
 		.name = "masterTask",
 		.priority = (osPriority_t) osPriorityHigh,
-		.stack_size = 256
+		.stack_size = 512
 	  };
 	masterTaskHandle = osThreadNew(MasterTask, NULL, &masterTask_attributes);
 	viveQueue = osMessageQueueNew(10, sizeof(VIVEVars), NULL);

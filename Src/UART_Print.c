@@ -22,7 +22,7 @@ void UART_Print_float(float val){
 	uint8_t message_buf[BUF_SIZE];
 	memcpy(message_buf, &val, sizeof(float));
 	HAL_UART_Transmit(&huart1, (uint8_t*)message_buf, BUF_SIZE, 1000);
-	//HAL_UART_Transmit_IT(&huart1, (uint8_t*)message_buf, BUF_SIZE - 2);
+	//HAL_UART_Transmit_IT(&huart1, (uint8_t*)message_buf, BUF_SIZE);
 }
 
 void UART_Print_uint32_t(uint32_t val){
