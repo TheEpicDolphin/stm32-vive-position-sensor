@@ -18,6 +18,12 @@ void UART_Send_Start(){
 	HAL_UART_Transmit(&huart1, (uint8_t*)message_buf, strlen(message_buf), 0xFFFF);
 }
 
+void UART_Print_3DCoords(float *pos){
+	uint8_t message_buf[12];
+	memcpy(message_buf, pos, 3 * sizeof(float));
+	HAL_UART_Transmit(&huart1, (uint8_t*)message_buf, 12, 1000);
+}
+
 void UART_Print_float(float val){
 	uint8_t message_buf[BUF_SIZE];
 	memcpy(message_buf, &val, sizeof(float));

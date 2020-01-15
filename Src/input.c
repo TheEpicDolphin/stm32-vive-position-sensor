@@ -56,10 +56,10 @@ void MasterTask(void *argument){
 		while(1){
 			osMessageQueueGet(viveQueue, (void *) &vive_vars, NULL, osWaitForever);
 
-			if(m_count == 50){
-				UART_Print_float(vive_vars.pos[0]);
+			if(m_count == 5){
+				UART_Print_3DCoords(vive_vars.pos);
 				osThreadFlagsSet(pulseHandlerTaskHandle, 0x00000002U);
-				osDelay(5000);
+				osDelay(10);
 				break;
 			}
 			m_count += 1;

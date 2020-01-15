@@ -6,6 +6,8 @@
 
 void UART_Send_Start();
 
+void UART_Print_3DCoords(float *pos);
+
 void UART_Print_float(float val);
 
 void UART_Print_uint32_t(uint32_t val);
