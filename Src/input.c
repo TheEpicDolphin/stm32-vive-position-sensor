@@ -38,11 +38,6 @@ void PulseHandlerTask(void *argument){
 				osMessageQueueReset(pulseQueue);
 				break;
 			}
-			//VIVEVars v;
-			//v.pos[0] = 4.0;
-			//v.pos[1] = 2.0;
-			//v.pos[3] = 0.0;
-			//osMessageQueuePut(viveQueue, (void *) &v, NULL, 0);
 		}
 	}
 
@@ -50,12 +45,16 @@ void PulseHandlerTask(void *argument){
 
 VIVEVars vive_vars;
 void MasterTask(void *argument){
+	_Input(&input0, 0);
+	UART_Print_3DCoords(geometry_builder.base_stations_[0].origin);
+	UART_Print_3DCoords(geometry_builder.base_stations_[1].origin);
 	while(1){
 		osThreadFlagsSet(pulseHandlerTaskHandle, 0x00000001U);
 		uint32_t m_count = 0;
 		while(1){
 			osMessageQueueGet(viveQueue, (void *) &vive_vars, NULL, osWaitForever);
 
+			/*
 			if(m_count == 5){
 				UART_Print_3DCoords(vive_vars.pos);
 				osThreadFlagsSet(pulseHandlerTaskHandle, 0x00000002U);
@@ -63,6 +62,9 @@ void MasterTask(void *argument){
 				break;
 			}
 			m_count += 1;
+			*/
+
+			UART_Print_3DCoords(vive_vars.pos);
 		}
 	}
 }

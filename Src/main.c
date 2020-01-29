@@ -28,8 +28,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "input.h"
-#include "pulse_processor.h"
-#include "circular_buffer.h"
 #include "UART_Print.h"
 /* USER CODE END Includes */
 
@@ -99,6 +97,7 @@ int main(void)
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
   UART_Send_Start();
+
   HAL_TIM_Base_Start(&htim16);
 
   /* USER CODE END 2 */

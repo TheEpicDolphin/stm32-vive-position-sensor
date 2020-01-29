@@ -3,7 +3,6 @@
 #include "messages.h"
 #include "cycle_phase_classifier.h"
 #include "geometry.h"
-//#include "input.h"
 
 #define MAX_CAPACITY	16
 typedef struct vector {

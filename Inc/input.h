@@ -9,12 +9,10 @@
 #include "stm32wbxx_hal.h"
 #include "pulse_processor.h"
 #include "geometry.h"
-#include "circular_buffer.h"
 #include "messages.h"
 #include "tim.h"
 
 typedef struct Input{
-	CircularBuffer pulses_buf_;
 	// Index of this input.
 	uint8_t input_idx_;
 
