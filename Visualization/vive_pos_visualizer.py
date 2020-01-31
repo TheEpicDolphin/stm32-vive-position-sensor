@@ -5,6 +5,45 @@ import numpy as np
 import serial
 import struct
 import threading
+import colorsys
+from lights_controller import *
+
+
+fixture_positions =np.array([[1.5, -3.0],
+                             [1.5, -2.8],
+                             [1.5, -2.5],
+                             [1.4, -2.1],
+                             [1.37, -0.8],
+                             [1.35, -00.4],
+                             
+                             [-0.5, -2.3],
+                             [-0.5, -2.1],
+                             [-0.5, -1.4],
+                             [-0.5, -1.2],
+                             [-0.5, -0.5],
+                             [-0.5, -0.25],
+
+                             [0.68, -1.9],
+                             [1, -2.25],
+                             [1.23, -2.44],
+                             [1.35, -2.23],
+
+                             [-0.07, -1.27],
+                             [0.027, -1.15],
+                             [0.21, -1.14],
+                             [0.48, -1.3]])
+
+
+client = init_client("lights.media.mit.edu", 10002)
+set_lights_active(client)
+
+def update_fixtures(cur_pos):
+    dp = fixture_positions - cur_pos
+    distances = np.linalg.norm(dp, axis=1)
+    intensity = (0.5 - np.clip(distances, 0.0, 0.5)) / 0.5
+    
+    for i in range(fixture_positions.shape[0]):
+        set_color(client, i + 1, colorsys.hsv_to_rgb(0.5, 1.0, intensity[i]))    
 
 
 #Draw axes
@@ -32,6 +71,7 @@ sphere = loader.loadModel("smiley.egg")
 sphere.reparentTo(render)
 sphere.setPos(0, 0, 0)
 sphere.setColor(0.7, 0.4, 0.4)
+sphere.setColor(1, 1, 1, 1)
 
 base_station_0 = loader.loadModel("cylinder.x")
 base_station_0.reparentTo(render)
@@ -61,7 +101,8 @@ stepSize = 1.0 / 90.0
 x, y, z = (0, 0, 0)
 
 ser = serial.Serial(
-    port='COM5',\
+    #port='COM5',\
+    port='COM8',
     baudrate=9600,\
     parity=serial.PARITY_NONE,\
     stopbits=serial.STOPBITS_ONE,\
@@ -100,6 +141,7 @@ def serial_reader(ser):
         #32 bit float
         #y and z are flipped
         x_s, y_s, z_s = struct.unpack(3 * 'f', line)
+        update_fixtures(np.array([x_s, z_s]))
         x, y, z = 100 * x_s, 100 * -z_s, 100 * y_s
         print(x_s, y_s, z_s)
     ser.close()
